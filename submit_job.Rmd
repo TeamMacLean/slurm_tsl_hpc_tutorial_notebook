@@ -1,0 +1,57 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+## Submitting a job to HPC
+
+Let's say you want to submit a simple job of indexing a reference sequence. The command to index a reference sequence is 
+
+```
+bowtie2-build -f myreference.fasta myreference_index.fasta
+```
+
+However, you should not run the above command on the login node (or submission node/Head node). The login node is a server with very limitted resources for managing the users who are logged in. To submit the above command to the HPC from the login node, you will need to create a bash job script with that command in it.
+
+You can create a bash script using any visual editor. In command line, vi and nano are popular editors. Let's try to create bash script using nano.
+
+After you are logged in to HPC, type 
+```
+nano index.sh
+```
+
+nano will create a file called index.sh, if it does not exist and open it. Copy and paste these code in the editor now.
+
+```
+#!/bin/bash
+
+# SLURM --mem=10G  # memory requirement for the job
+# SLURM -o index.log  # output file for any log
+# SLURM -J index-reference   # a job name to indentify job in HPC
+# SLURM -e index.err  # error output filename if error occurs
+# SLURM -p tsl-long   # TSL HPC partition name, other partitions- tsl-short, tsl-medium
+# SLURM -n 1  # number of tasks to run
+# SLURM -N  # number of nodes
+
+source bowtie2-2.3.5
+
+bowtie2-build -f myreference.fasta myreference_index.fasta
+```
+
+Press ctrl+o to write/save the file and ctrl+x to exit the nano editor.
+
+As you see, there are many lines added, not just the bowtie2-build command to generate index files. We will go through what these lines are:
+
+Line 1:  #!/bin/bash : This line basically says the the script is a bash script and the bash executable file to run this script is in the path /bin/bash.
+Line 3 - 9 : These lines specifies the resources we are asking the HPC SLURM job manager to run the job. The annotated text in the script says that explicitly.
+Line 11: source bowtie2-2.3.5 - This line adds the bowtie2 executable files in your working environment. If you don't do this, the next command will to build the index will fail because bowtie2-build command will not be found. For a test, type "which bowtie2-build" in the terminal and hit enter, it will say the "bowtie2-build command not found", now type "source bowtie2-2.3.5" and hit enter, type "which bowtie2-build" again and hit enter, this time it will show the path to the executable file bowtie2-build. This is because after sourcing the bowtie2-2.3.5, the path to the executable files are added to you environment. To see what are the paths in your environment, type "echo $PATH".
+
+Line 13: This is the command to index the reference sequence with the command bowtie2-build.
+
+Now it's the time to run the job in the HPC cluster. Type the command
+```
+sbatch index.sh
+```
+
+
+

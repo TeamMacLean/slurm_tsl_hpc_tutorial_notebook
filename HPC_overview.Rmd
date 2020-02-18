@@ -1,0 +1,24 @@
+---
+title: "HPC Resources"
+author: "Ram Krishna Shrestha"
+date: "3 February 2020"
+output: html_document
+---
+
+## HPC Overview
+
+The following figure shows the overall overview of the HPC.
+
+![HPC overview](/home/shrestha/SLURM_HPC_Training_Material/figures/hpc_overview.png "HPC overview")
+
+Let's discuss different numbered parts in the HPC overview
+
+1) User : You are the user with your local machine (laptops/desktop PCs). You connect to the submission node at tsl.hpc.ac.uk or slurm.nbi.ac.uk using the <strong>ssh</strong> command. E.g ssh username@tsl.hpc.ac.uk and your password.
+
+2) Submission node: After ssh login, you are now working from the submission node. For easy understanding, the submission node is a less powerful computing resource that manages all the users logged in and giving access to your files in the HPC. <strong>EARLY WARNING</strong>: Never run a job requiring huge computing resources on the submission node. This will kill the submission node and every user logged in to the submission node will have unresponsive terminal. We will talk about <strong>INTERACTIVE</strong> session for this later on.
+
+3) SLURM: SLURM is the job and resource managing software. Large number of jobs get submitted from large number of users logged in to the submission node. Job are defined with different computing resources and based on the computing resources requirement SLURM manages the jobs. SLURM checks if there is any computing node with enough resources that is defined in a submitted job. If it finds the computing node, the job is executed in that node otherwise SLURM puts the job in a job queue waiting for the computing resource availability.
+
+4) Computing nodes: There many be large number of computing nodes. For easy understanding, each node is a stack of computers in networking. For example, if a node has 32 processor and 128 GB RAM memory that is equivalent to 32 computers each with 1 processor and 4 GB RAM memory.
+
+5) Disk storage: All files in the HPC for all users are stored in a very large storage disk. Every user is given ~ 300GB HOME space. Users are advised to use this space storing for small programs, custom scripts or small data files. The path to user HOME is usally <strong>/hpc-home/your-username</strong>. Every user is also given scratch space for storing large files. User scratch area path is <strong>/tsl/scratch/your-username</strong>. Store your result files here like the large BAM files. Only you have access to your HOME and scratch space. There is a common accessible paths like <strong>dropbox (/tsl/data/dropbox)</strong> and <strong>sequences (/tsl/data/sequences)</strong>. Users can use dropbox space temporarily for sharing files. Dropbox space is clearly regularly, therefore, do not save your files in <strong>dropbox</strong> and forget it. Bioinformatics team will contact you to clear the space. <strongg>Sequences</strong> space is used for strong commonly used reference sequences and annotation files. Users are not advised to store any anlysis data files here. Users obtaining raw sequence data from sequencing providers can download the data to <strong>dropbox</strong> space. However, they must upload the data to <strong>datahog (sequences.tsl.ac.uk)</strong> as soon as possible. For any query regarding uploading data files to datahog, contact TSL Bioinformatics Team Room G27.
