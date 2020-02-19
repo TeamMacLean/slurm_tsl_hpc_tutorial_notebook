@@ -1,0 +1,33 @@
+## View Queued Jobs
+
+The squeue command is used to view job and job step information for processes managed by the SLURM scheduler.
+
+To view all the jobs submitted by everyone in the HPC
+
+```
+squeue
+```
+
+To view jobs submitted by you
+
+```
+squeue -u your-username
+```
+
+To view your running jobs
+
+```
+squeue -u your-username -t RUNNING
+```
+
+To view your pending jobs
+
+```
+squeue -u your-username -t PENDING
+```
+
+To view your jobs in a partition
+
+```
+squeue -u your-username -p tsl-long
+```

@@ -1,0 +1,35 @@
+## Job Dependency
+
+Sometimes we require to run a job after another job finishes. This is a case of job dependency. If one or more job/s are already running and you want to run another job, after all running jobs are completed, you can submit the job with job dependency.
+
+The option --dependency is used to submit a job with job dependency.
+
+Let's view the jobs in HPC first. 
+
+```
+squeue -u shrestha
+   JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+25800792  tsl-long     job1 shrestha  R       0:08      1 t128n67
+25800793  tsl-long     job2 shrestha  R       1:03      1 t128n67
+```
+
+Here I have two jobs running at the moment. Now I submit another jobs with job dependency on these two jobs.
+
+```
+sbatch -J job3 --wrap "sleep 200"
+Submitted batch job 25800794
+```
+
+Let's check the jobs again.
+```
+squeue -u shrestha
+   JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+25800794  tsl-long     job3 shrestha PD       0:00      1 (Dependency)
+25800793  tsl-long     job2 shrestha  R       0:23      1 t128n93
+25800792  tsl-long     job1 shrestha  R       1:03      1 t128n67
+```
+
+Here we see that the job3 is at pending state (PD) and the reason is Dependency. Once job1 and job2 completes, job3 will get executed in the HPC.
+
+
+

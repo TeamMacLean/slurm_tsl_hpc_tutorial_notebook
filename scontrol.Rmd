@@ -1,0 +1,66 @@
+## Job Details
+
+The command scontrol can be used to control a pending job or get the details of a running job in the HPC.
+
+```
+scontrol show job jobid
+```
+
+For example
+
+```
+scontrol show job 25800794
+JobId=25800794 JobName=job2
+   UserId=shrestha(10273) GroupId=TSL_20(11045) MCS_label=N/A
+   Priority=11021 Nice=0 Account=tsl QOS=normal WCKey=*default
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:03:21 TimeLimit=90-00:00:00 TimeMin=N/A
+   SubmitTime=2020-02-18T23:52:35 EligibleTime=2020-02-18T23:55:50
+   StartTime=2020-02-18T23:55:50 EndTime=2020-02-18T23:59:11 Deadline=N/A
+   PreemptTime=None SuspendTime=None SecsPreSuspend=0
+   LastSchedEval=2020-02-18T23:55:50
+   Partition=tsl-long AllocNode:Sid=v0548:12498
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=t128n67
+   BatchHost=t128n67
+   NumNodes=1 NumCPUs=1 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=1,mem=4G,node=1,billing=1
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryCPU=4G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   Gres=(null) Reservation=(null)
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=(null)
+   WorkDir=/hpc-home/shrestha
+   Comment=** num_tasks (1) min_nodes (1) partition (tsl-long) **
+   StdErr=/hpc-home/shrestha/slurm-25800794.out
+   StdIn=/dev/null
+   StdOut=/hpc-home/shrestha/slurm-25800794.out
+   Power=
+```
+
+If a job is in pending state, scontrol command can be used to update the job controls.
+
+Let's say you submitted a job in the partition tsl-short, but now you want to change the parition to tsl-long and number of cpus per node to 16.
+
+```
+scontrol update JobID=25800794 Partition=tsl-long MinCPUsNode=16
+```
+
+To hold a pending job from running
+
+```
+scontrol hold 25800794
+scontrol uhold 25800794
+```
+
+To resume a hold job
+
+```
+scontrol release 25800794
+```
+
+
+
+

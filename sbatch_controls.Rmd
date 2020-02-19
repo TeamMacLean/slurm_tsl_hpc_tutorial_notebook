@@ -1,0 +1,52 @@
+## Job Submit Controls
+
+There are many options you can use to control job submission. We will discuss the most widely used options here:
+
+### RAM Memory
+
+option used --mem. E.g. --mem 1000 or --mem 2G
+
+This specifies the real memory required per node.  Default units are megabytes. Here 1000 mean 1000 MB RAM memory and 2G means 2 GB RAM memory.  Different units  can  be specified using the suffix [K|M|G|T].
+
+### Partition
+
+option used --partition, -p E.g -p tsl-long or --partition tsl-long
+
+This option specifies the HPC partition name where you want to submit a job. There are three partitions in our TSL HPC. They are tsl-short, tsl-medium and tsl-long. The default partition is <strong>tsl-long</strong>. These partitions are not physical but virtual partition in HPC and are partitioned based on the job run time limit. tsl-short has short time limit or 6 hours, tsl-medium has time limit of 7 days and tsl-long has unlimited job running time. In tsl-short and tsl-medium if a job runs outside the job run limit time, the job will get terminated.
+
+### Output file
+
+option --output, -o E.g -o program.log
+
+This option specifies the output filename. The default output filename is slurm-jobid.out in your current working directory. Many software tools outputs results or logs on the screen and these will be saved in the output file specified using this option.
+
+### Error file
+
+option --error, -e E.g. -e program.error
+
+This specifies the filename to store any error log in your command. By default, the error log will be saved in the output filename.
+
+### Number of nodes
+
+option --nodes, -N. E.g --nodes 2
+
+This specifies the minimum number of nodes to allocate for the job. Default is 1.
+
+### Number of tasks
+
+option --ntasks, -n E.g. -n 2
+
+sbatch  does not launch tasks, it requests an allocation of resources and submits a batch script. This option advises the Slurm controller that job steps run within the allocation will launch a maximum of number tasks and to provide for sufficient resources.  The default is one task per node, but note that the --cpus-per-task option will change this default.
+
+### CPUs per task
+
+options --cpus-per-task, -c. E.g. -c 2
+
+This advises the Slurm controller that ensuing job steps will require ncpus number of processors per task.  Without this option, the controller will just try to allocate one processor per task.
+
+### Email
+
+options --mail-type=BEGIN,END,FAIL and --mail-user=ram_krishna.shrestha@tsl.ac.uk
+
+These options will send email to the user based on the mail type specified. The mail type are BEGIN, END and/or FAIL. An email is send out to the specified email id when the submitted job begins, ends successfully or fails. E-mails can also be sent for other processing stages (START) or for all events (ALL).
+

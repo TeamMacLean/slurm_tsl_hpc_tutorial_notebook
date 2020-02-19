@@ -1,0 +1,63 @@
+## Job Array
+
+Sometimes we have hundreds of jobs to run. Submitting all jobs using sbatch command can overkill the slurm scheduler. Managing hundreds of jobs can also be hassle. Submitting these hundreds of jobs as a job array is simple to implement and job managment is quick and easy.
+
+An important thing to note, is that all jobs must have the same initial options (e.g. size, time limit, etc.).  This is because the jobs are submitted from one job script, meaning job arrays can be submitted very quickly (i.e. the same time it takes to submit one job) unlike multiple individual jobs.
+
+Let's say you have 100 script files - Job1.sh, Job2.sh, Job3.sh ..... Job100.sh
+
+These job scripts have different commands you want to run. All these scripts can be submitted to the HPC using job array. In order to submit these 100s of jobs, a master script needs to be generated. Create a master.sh script 
+
+```
+#!/bin/bash
+## master.sh
+srun ./Job${SLURM_ARRAY_TASK_ID}.sh
+```
+
+Now submit the master.sh script as below:
+```
+sbatch --array=1-100 -p tsl-long --mem 10G --wrap "./master.sh"
+```
+
+This will submit an array of 100 jobs. Each job will have SLURM_ARRAY_TASK_ID unique value from 1 to 100. The value is used in the master script defining a job script to run.
+
+I have a master script ./mastersleep.sh that has
+ 
+```
+#!/bin/bash
+
+srun ./sleep${SLURM_ARRAY_TASK_ID}.sh
+```
+
+Here, I submit an array of 3 jobs controled by master script ./mastersleep.sh.
+
+```
+sbatch --array=1-3 ./mastersleep.sh
+Submitted batch job 25801035
+
+squeue -u shrestha
+   JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+25801035_1  tsl-long mastersl shrestha  R       0:03      1 t128n67
+25801035_2  tsl-long mastersl shrestha  R       0:03      1 t128n87
+25801035_3  tsl-long mastersl shrestha  R       0:03      1 t128n93
+```
+Check the job id format. It has the master script jobid underscore the taskid.
+
+Although I have other scripts - sleep4.sh sleep5.sh, these will not be executed as the SLURM_ARRAY_TASK_ID value will only change from 1 to 3 as defined by the option --array.
+
+If you are running hundreds of jobs using array method and you want to cancel all the jobs, this can be done just by cancelling the master script jobid.
+
+```
+scancel 25801035
+```
+
+Here, this will kill all array jobs.
+
+You can also cancel a particular job from the job array.
+
+```
+scancel 25801035_2
+```
+
+This will kill only the second job from the array.
+

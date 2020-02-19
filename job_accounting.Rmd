@@ -1,0 +1,54 @@
+## Accounting Jobs
+
+### Account Running Jobs
+
+The sstat command is used for accounting running jobs. For a jobid 25778847
+
+```
+sstat 25778847
+       JobID  MaxVMSize  MaxVMSizeNode  MaxVMSizeTask  AveVMSize     MaxRSS MaxRSSNode MaxRSSTask     AveRSS MaxPages MaxPagesNode   MaxPagesTask   AvePages     MinCPU MinCPUNode MinCPUTask     AveCPU   NTasks AveCPUFreq ReqCPUFreqMin ReqCPUFreqMax ReqCPUFreqGov ConsumedEnergy  MaxDiskRead MaxDiskReadNode MaxDiskReadTask  AveDiskRead MaxDiskWrite MaxDiskWriteNode MaxDiskWriteTask AveDiskWrite
+------------ ---------- -------------- -------------- ---------- ---------- ---------- ---------- ---------- -------- ------------ -------------- ---------- ---------- ---------- ---------- ---------- -------- ---------- ------------- ------------- ------------- -------------- ------------ --------------- --------------- ------------ ------------ ---------------- ---------------- ------------
+25778847.0      313684K         n128n1              0    131176K      4520K     n128n1          0      3364K        0       n128n1              0          0  00:03.000     n128n1          0  00:03.000        1      1.43T       Unknown       Unknown       Unknown              0       10.95M          n128n1               0       10.95M        3.37M           n128n1                0        3.37M
+```
+
+By default, the information displayed is too much. The columns can be selected as
+
+```
+sstat 25778847 --format=jobid,AveCPU,MaxRSS,NTasks
+       JobID     AveCPU     MaxRSS   NTasks
+------------ ---------- ---------- --------
+25778847.0    00:03.000      4520K        1
+```
+
+### Account Completed Jobs
+
+The sacct command is used for accounting completed as well as running/pending jobs.
+
+```
+sacct
+       JobID    JobName  Partition    Account  AllocCPUS      State ExitCode
+------------ ---------- ---------- ---------- ---------- ---------- --------
+25772449     1102_1_tar   tsl-long        tsl          2  COMPLETED      0:0
+25772449.ba+      batch                   tsl          2  COMPLETED      0:0
+25772449.ex+     extern                   tsl          2  COMPLETED      0:0
+25772453     1102_2_tar   tsl-long        tsl          2  COMPLETED      0:0
+25772453.ba+      batch                   tsl          2  COMPLETED      0:0
+25772453.ex+     extern                   tsl          2  COMPLETED      0:0
+```
+
+Note the output is detailed information for each job step and the job as a whole.
+
+By default, the sacct command will show the above data for all of your own jobs completed in the current day, from midnight to the present.  To specify a particular time window use the -S and -E parameters.
+May more fields are available, and the output can be formatted, e.g.:
+
+```
+sacct --format=jobid,Partition,elapsed,cputime,AveCPU,Timelimit,ncpus,ntasks,AveVMSize,user,state,ExitCode
+       JobID  Partition    Elapsed    CPUTime     AveCPU  Timelimit      NCPUS   NTasks  AveVMSize      User      State ExitCode
+------------ ---------- ---------- ---------- ---------- ---------- ---------- -------- ---------- --------- ---------- --------
+25772449       tsl-long   17:41:18 1-11:22:36            90-00:00:+          2                      shrestha  COMPLETED      0:0
+25772449.ba+              17:41:18 1-11:22:36   05:16:17                     2        1    269248K            COMPLETED      0:0
+25772449.ex+              17:41:30 1-11:23:00   00:00:00                     2        1    107956K            COMPLETED      0:0
+25772453       tsl-long   19:22:05 1-14:44:10            90-00:00:+          2                      shrestha  COMPLETED      0:0
+25772453.ba+              19:22:05 1-14:44:10   06:29:34                     2        1    269248K            COMPLETED      0:0
+25772453.ex+              19:22:16 1-14:44:32   00:00:00                     2        1    107956K            COMPLETED      0:0
+```

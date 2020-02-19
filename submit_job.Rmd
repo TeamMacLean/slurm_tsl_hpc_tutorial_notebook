@@ -1,9 +1,4 @@
----
-title: "R Notebook"
-output: html_notebook
----
-
-## Submitting a job to HPC
+## Submitting a job to HPC Option 1
 
 Let's say you want to submit a simple job of indexing a reference sequence. The command to index a reference sequence is 
 
@@ -52,6 +47,51 @@ Now it's the time to run the job in the HPC cluster. Type the command
 ```
 sbatch index.sh
 ```
+
+You will get a job number from the HPC as below.
+```
+Submitted batch job 25800717
+```
+
+The job number is increased by 1 every time someone submits a new job. Therefore, you can expect a different job number when you submit. The job number is important for managing or controlling your job.
+
+Let's view our job in the HPC now with the command squeue and the username as below
+
+```
+[shrestha@TSL-HPC ~]$ squeue -u shrestha
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          25800717  tsl-long index.sh shrestha  R       0:07      1 t128n67
+```
+
+Here our job is listed and has already been running of 0:07 seconds.
+
+## Submitting a job to HPC Option 2
+
+Remember we put the SLURM sbatch options in the script above. It is not necessary to put the SLURM sbatch options in the script. These options can also be controled from the command line when submitting a job. Let's prepare a script as following without SLURM sbatch options:
+
+```
+#!/bin/bash
+
+source bowtie2-2.3.5
+
+bowtie2-build -f myreference.fasta myreference_index.fasta
+```
+
+This script can be submitted to HPC with same options as above in the following way:
+```
+sbatch --mem 10G -o index.log -J index-reference -e index.err -p tsl-long -n 1 -N 1 index.sh
+```
+
+## Submitting a job to HPC Option 3
+
+In this method, you are not required to create a script to submit a job. A command you want to run can be submitted to the HPC directly using the option --wrap. Here is an example:
+
+```
+sbatch --mem 10G -o index.log -J index-reference -e index.err -p tsl-long -n 1 -N 1 --wrap "bowtie2-build -f myreference.fasta myreference_index.fasta"
+```
+
+As you see, the command is wrapped in double quotes after the option --wrap. However, you should have bowtie2-build executable in your environment path before you run a job in this way. You will need to run source a bowtie2 package from command line first by running source bowtie2-x.x.x. Similarly, if you are command a command using a different software tool, that software tool needs to be sourced first.
+
 
 
 

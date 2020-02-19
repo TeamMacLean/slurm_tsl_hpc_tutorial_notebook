@@ -1,0 +1,32 @@
+## Cancel a running job
+
+Sometime a pending or running job needs to be canceled/killed. The scancel command is used to terminate a job managed by Slurm scheduler.
+
+You will need your jobid or jobname to cancel the job. You can view the jobs queued using the squeue command and then copy the jobid or jobname.
+
+To cancel a job by jobid
+
+```
+scancel jobid
+```
+
+To cancel a job by jobname
+
+```
+scancel -n jobname
+scancel --jobname jobname
+```
+
+To cancel all jobs running in a partition
+
+```
+scancel --partition tsl-long
+scancel -p tsl-short
+```
+
+To cancel all jobs running in a particular node/s
+
+```
+scancel --nodelist=t128n5,t256n1
+scancel -w t12n5,t256n1
+```
